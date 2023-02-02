@@ -7,7 +7,7 @@ public class Filmarkiv implements FilmarkivADT {
 	private int antall;
 	
 	public Filmarkiv(int antall) {
-		this.filmarkiv = new Film[antall];
+		filmarkiv = new Film[antall];
 		this.antall = 0;
 		
 		
@@ -28,7 +28,7 @@ public class Filmarkiv implements FilmarkivADT {
 	public Film finnFilm(int nr) {
 		Film funnet = new Film();
 		
-		for (int i = 0; i < filmarkiv.length; i++) {
+		for (int i = antall; i < filmarkiv.length; i++) {
 			
 			if (filmarkiv[i].getFilmnr() == nr) {
 				
@@ -44,14 +44,18 @@ public class Filmarkiv implements FilmarkivADT {
 	
 
 	@Override
-	public void leggTilFilm(Film nyFilm) {
-		int i = 0;
-		while (i<=antall) {
-			if(filmarkiv[i] == null) {
+	public void leggTilFilm(Film nyFilm) { 
+		int i = antall;
+		
+		while (i < filmarkiv.length) {
+			
+			if (filmarkiv[i] == null) {
+				
 				filmarkiv[i] = nyFilm;
-			} else {
-				i++;
+				break;
 			}
+			i++;
+			antall++;
 		}
 			
 		
@@ -61,15 +65,12 @@ public class Filmarkiv implements FilmarkivADT {
 	@Override
 	public boolean slettFilm(int filmnr) {
 		boolean slettet = false; 
-		
-		for (int i = 0; i < filmarkiv.length; i++) {
-			if (filmarkiv[i].getFilmnr() == filmnr) {
-				filmarkiv[i] = null;
-				slettet = true;
-			}
+		Film f = finnFilm(filmnr);
+		if (f != null) {
+			f = null;
+			slettet = true;
 		}
-		trimTab(filmarkiv, antall);
-		
+		filmarkiv = trimTab(filmarkiv, filmarkiv.length);
 		return slettet;
 		
 	}
@@ -85,38 +86,47 @@ public class Filmarkiv implements FilmarkivADT {
 	@Override
 	public Film[] soekTittel(String delstreng) {
 		Film[] tittel = new Film[filmarkiv.length];
+		Film[] tab = trimTab(filmarkiv, antall);
 		int nyAntall = 0;
-		for (int i = 0; i < filmarkiv.length; i++) {
-			if (filmarkiv[i].getTittel().contains(delstreng)) {
-				tittel[nyAntall] = filmarkiv[i];
+		for (int i = 0; i < tab.length; i++) {
+			if (tab[i].getTittel().contains(delstreng) && tab[i] != null) {
+				tittel[nyAntall] = tab[i];
 				nyAntall++;
 			}
 		}
-		trimTab(tittel, nyAntall);
+		tittel = trimTab(tittel, nyAntall);
 		return tittel;
 	}
 
 	@Override
 	public Film[] soekProdusent(String delstreng) {
 		Film[] produsent = new Film[filmarkiv.length];
+		Film[] tab = trimTab(filmarkiv, antall);
+		
 		int nyAntall = 0;
-		for (int i = 0; i < filmarkiv.length; i++) {
-			if (filmarkiv[i].getProdusent().contains(delstreng)) {
-				produsent[nyAntall] = filmarkiv[i];
+		for (int i = 0; i < tab.length; i++) {
+			
+			if (tab[i].getProdusent().contains(delstreng)) {
+				
+				produsent[nyAntall] = tab[i];
 				nyAntall++;
 			}
 		}
-		trimTab(produsent, nyAntall);
+		produsent = trimTab(produsent, nyAntall);
+		
 		return produsent;
 	}
 
 	@Override
 	public int antall(Sjanger sjanger) {
 		int antall = 0;
-		for (int i = 0; i < filmarkiv.length; i++) {
-			if (filmarkiv[i].getSjanger() == sjanger) { 
+		Film[] tab = trimTab(filmarkiv, antall); 
+		
+		for (int i = 0; i < tab.length; i++) {
+			
+			if (tab[i].getSjanger() == sjanger) { 
 				antall++;
-			} 
+			}
 		}
 		return antall;
 		
@@ -126,7 +136,8 @@ public class Filmarkiv implements FilmarkivADT {
 
 	@Override
 	public int antall() {
-		return antall;
+		
+	return antall;	
 	}
 	
 	private Film[] trimTab(Film[] tab, int n) { 

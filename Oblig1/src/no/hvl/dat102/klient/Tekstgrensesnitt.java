@@ -42,17 +42,31 @@ public class Tekstgrensesnitt {
 		 
 		 // Skrive ut alle Filmer med en spesiell delstreng i tittelen 
 	public void skrivUtFilmDelstrengITittel(FilmarkivADT filma, String delstreng) { 
-		 System.out.print(filma.soekTittel(delstreng));
-		 } 
+		Film[] tittel= filma.soekTittel(delstreng);
+		
+		for(int i = 0; i < tittel.length; i++) {
+			if(tittel[i] != null) {	
+			System.out.println(tittel[i].getTittel());
+			}
+			}
+		}
 		 
 		 // Skriver ut alle Filmer av en produsent / en gruppe 
 	public void skrivUtFilmProdusent(FilmarkivADT filma, String delstreng) { 
-		 System.out.print(filma.soekProdusent(delstreng));
-		 } 
+		Film[] prod = filma.soekProdusent(delstreng);
+		for(int i = 0; i < prod.length; i++) {
+			if (prod[i] != null) {
+			
+			visFilm(prod[i]);
+			}
+			}
+		}
+		
 		 
 		 // Skrive ut en enkel statistikk som inneholder antall Filmer totalt 
 		 // og hvor mange det er i hver sjanger 
 	public void skrivUtStatistikk(FilmarkivADT filma) {
+		
 		
 		  System.out.println("Totalt antall filmer: " + filma.antall());
 		  System.out.println("Totalt antall filmer i sjangeren action: " + filma.antall(Sjanger.ACTION));
