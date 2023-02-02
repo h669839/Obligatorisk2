@@ -119,16 +119,16 @@ public class Filmarkiv implements FilmarkivADT {
 
 	@Override
 	public int antall(Sjanger sjanger) {
-		int antall = 0;
+		int ant = 0;
 		Film[] tab = trimTab(filmarkiv, antall); 
 		
 		for (int i = 0; i < tab.length; i++) {
 			
 			if (tab[i].getSjanger() == sjanger) { 
-				antall++;
+				ant++;
 			}
 		}
-		return antall;
+		return ant;
 		
 		
 		
