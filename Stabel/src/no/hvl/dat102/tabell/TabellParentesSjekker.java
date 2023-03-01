@@ -4,43 +4,43 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.lang.*;
+import java.util.*;
 
 import no.hvl.dat102.adt.Parentessjekker;
 import no.hvl.dat102.exception.EmptyCollectionException;
 
 public class TabellParentesSjekker<Character> extends TabellStabel<Character> implements Parentessjekker {
 
-	private Character[] expr;
-	private int str;
-
-	public TabellParentesSjekker(int maks) {
-		str = 0;
-		expr = (Character[]) (new Object[maks]);
-	}
-
 	@Override
 	public boolean erVenstreparentes(char p) {
 		boolean funnet = false;
 		
+		if(p == '(' || p == '[' || p == '{') {
+			
+			funnet = true;
+		}
+		return funnet;
 	}
 
 	@Override
 	public boolean erHogreparentes(char p) {
-		boolean funnet = false;
-
-		if (peek().equals(p)) {
+boolean funnet = false;
+		
+		if(p == ')' || p == ']' || p == '}') {
+			
 			funnet = true;
 		}
-
 		return funnet;
-
 	}
 
 	@Override
 	public boolean erParentes(char p) {
-		TabellStabel<Character> stabel = new TabellStabel<Character>();
 		boolean funnet = false;
-		for 
+		
+		if(erVenstreparentes(p) || erHogreparentes(p)) {
+			
+			funnet = true;
+		}
 
 
 		return funnet;
@@ -49,10 +49,16 @@ public class TabellParentesSjekker<Character> extends TabellStabel<Character> im
 	@Override
 	public boolean erPar(char venstre, char hogre) {
 		boolean par = false;
-
-		if (erVenstreparentes(venstre)) {
-
-			if (erHogreparentes(hogre)) {
+		
+		if (erVenstreparentes(venstre) && erHogreparentes(hogre)) {
+	
+			if(venstre == '(' && hogre == ')') {
+				par = true;
+			}
+			else if (venstre == '[' && hogre == ']') {
+				par = true;
+			}
+			else if (venstre == '{' && hogre == '}') {
 				par = true;
 			}
 		}
@@ -62,43 +68,38 @@ public class TabellParentesSjekker<Character> extends TabellStabel<Character> im
 	@Override
 	public boolean erBalansert(String s) {
 		TabellStabel<Character> stabel = new TabellStabel<Character>();
-
-		for (int i = 0; i < s.length(); i++) {
-			char e = s.charAt(i);
-			Character[] charArray = stabel.toArray();
-
+		char[] charArray = s.toCharArray();
+		for (int i = 0; i < charArray.length; i++) {
+			char e = charArray[i]; 
 			if (e == '(' || e == '[' || e == '{') {
 
-				stabel.push(charArray[i]);
+				stabel.push(e);
 				continue;
 			}
 			if (stabel.erTom())
 				return false;
 
 			char sjekk;
-			Character ch;
 
 			switch (e) {
 
 			case ')':
-				ch = stabel.pop();
-				sjekk = (char) ch;
+				sjekk = (char) stabel.pop() ;
 				if (sjekk == ']' || sjekk == '}')
 					return false;
 				break;
 			case']':
-				ch = stabel.pop();
-				sjekk = (char) ch;
+				sjekk = (char) stabel.pop();
 				if(sjekk == ')' || sjekk == '}') return false;
 				break;
 			case'}':
-				ch = stabel.pop();
-				sjekk = (char) ch;
+				sjekk = (char) stabel.pop();
 				if(sjekk == ']' || sjekk ==')') return false;
 				break;
 			}
 
 		}
+		return stabel.erTom();
 	}
 
 }
